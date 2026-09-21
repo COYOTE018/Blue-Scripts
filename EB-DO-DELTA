@@ -1,7 +1,3 @@
--- ============================================
--- GBDASP Hub - Completo (Outros + Liberar Chat)
--- ============================================
-
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -12,17 +8,11 @@ local playerGui = player:WaitForChild("PlayerGui")
 local ID_BOLA = "rbxassetid://84861533911481"
 local ID_FUNDO = "rbxassetid://120671511416721"
 local TOM_SCRIPT = "https://rawscripts.net/raw/Universal-Script-Auto-jjs-EB-do-delta-126144"
-
 local KEY_URL = "https://pastebin.com/raw/H7tdHh9S"
-local correctKey = nil
 
-local success, result = pcall(function() return game:HttpGet(KEY_URL) end)
-if success then
-	correctKey = result:gsub("%s+", "")
-else
-	warn("Erro ao buscar key")
-	return
-end
+local correctKey = nil
+local ok, res = pcall(function() return game:HttpGet(KEY_URL) end)
+if ok then correctKey = res:gsub("%s+", "") else return end
 
 if playerGui:FindFirstChild("GBDASP_GUI") then playerGui.GBDASP_GUI:Destroy() end
 
@@ -39,13 +29,11 @@ CoyoteRun.Position = UDim2.new(-0.25, 0, 0.5, -75)
 CoyoteRun.BackgroundTransparency = 1
 CoyoteRun.ZIndex = 999
 CoyoteRun.Parent = ScreenGui
-
 task.spawn(function()
-	local tweenService = game:GetService("TweenService")
-	local info = TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-	local tween = tweenService:Create(CoyoteRun, info, {Position = UDim2.new(1.25, 0, 0.5, -75)})
-	tween:Play()
-	tween.Completed:Wait()
+	local ts = game:GetService("TweenService")
+	local tw = ts:Create(CoyoteRun, TweenInfo.new(3, Enum.EasingStyle.Linear), {Position = UDim2.new(1.25, 0, 0.5, -75)})
+	tw:Play()
+	tw.Completed:Wait()
 	CoyoteRun:Destroy()
 end)
 
@@ -65,13 +53,12 @@ local function makeDraggable(frame)
 	end)
 	UserInputService.InputChanged:Connect(function(input)
 		if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-			local delta = input.Position - dragStart
-			frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+			local d = input.Position - dragStart
+			frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
 		end
 	end)
 end
 
--- KEY
 local KeyFrame = Instance.new("Frame")
 KeyFrame.Size = UDim2.new(0, 300, 0, 170)
 KeyFrame.Position = UDim2.new(0.5, -150, 0.5, -85)
@@ -112,7 +99,6 @@ SubmitBtn.Parent = KeyFrame
 Instance.new("UICorner", SubmitBtn).CornerRadius = UDim.new(0, 8)
 makeDraggable(KeyFrame)
 
--- BOLA
 local Ball = Instance.new("TextButton")
 Ball.Size = UDim2.new(0, 65, 0, 65)
 Ball.Position = UDim2.new(0.85, 0, 0.4, 0)
@@ -130,7 +116,6 @@ BallImg.Parent = Ball
 Instance.new("UICorner", BallImg).CornerRadius = UDim.new(1, 0)
 makeDraggable(Ball)
 
--- MAIN
 local MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0, 480, 0, 400)
 MainFrame.Position = UDim2.new(0.5, -240, 0.5, -200)
@@ -197,6 +182,7 @@ local TabJJs = createTab("JJs", 132)
 local TabFarm = createTab("Farm", 172)
 local TabVolvers = createTab("VOLVERS", 212)
 local TabOutros = createTab("Outros", 252)
+local TabIA = createTab("IA", 292)
 local TabClose = createTab("Fechar", 340)
 
 local function addCopyRow(parent, text)
@@ -243,7 +229,6 @@ local function addCopyRow(parent, text)
 	end)
 end
 
--- PATENTES
 local PatentesScroll = Instance.new("ScrollingFrame")
 PatentesScroll.Size = UDim2.new(1, 0, 1, -35)
 PatentesScroll.Position = UDim2.new(0, 0, 0, 32)
@@ -291,7 +276,6 @@ PatentesList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 	PatentesScroll.CanvasSize = UDim2.new(0, 0, 0, PatentesList.AbsoluteContentSize.Y + 20)
 end)
 
--- PERGUNTAS
 local PerguntasScroll = Instance.new("ScrollingFrame")
 PerguntasScroll.Size = UDim2.new(1, 0, 1, -35)
 PerguntasScroll.Position = UDim2.new(0, 0, 0, 32)
@@ -326,7 +310,6 @@ PerguntasList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
 	PerguntasScroll.CanvasSize = UDim2.new(0, 0, 0, PerguntasList.AbsoluteContentSize.Y + 20)
 end)
 
--- PARKOUR
 local ParkourContent = Instance.new("Frame")
 ParkourContent.Size = UDim2.new(1, 0, 1, -35)
 ParkourContent.Position = UDim2.new(0, 0, 0, 32)
@@ -349,7 +332,6 @@ Instance.new("UICorner", ParkourBtn).CornerRadius = UDim.new(0, 8)
 
 local Hitboxes = {}
 local parkourEnabled = false
-
 local hitboxData = {
 	{pos = Vector3.new(185.03, 5.04, -661.62), size = Vector3.new(4.00, 0.50, 16.00)},
 	{pos = Vector3.new(185.39, 13.26, -661.39), size = Vector3.new(4.00, 0.50, 16.00)},
@@ -522,7 +504,6 @@ RunService.Heartbeat:Connect(function()
 	end
 end)
 
--- JJs
 local JJsContent = Instance.new("Frame")
 JJsContent.Size = UDim2.new(1, 0, 1, -35)
 JJsContent.Position = UDim2.new(0, 0, 0, 32)
@@ -545,25 +526,13 @@ Instance.new("UICorner", JJsBtn).CornerRadius = UDim.new(0, 8)
 
 local tomCarregado = false
 JJsBtn.MouseButton1Click:Connect(function()
-	if tomCarregado then
-		pcall(function()
-			game:GetService("StarterGui"):SetCore("SendNotification", {
-				Title = "Auto JJS",
-				Text = "Já está ativo!",
-				Duration = 3
-			})
-		end)
-		return
-	end
+	if tomCarregado then return end
 	JJsBtn.Text = "AUTO JJS: ON"
 	JJsBtn.BackgroundColor3 = Color3.fromRGB(0, 140, 255)
 	tomCarregado = true
-	pcall(function()
-		loadstring(game:HttpGet(TOM_SCRIPT))()
-	end)
+	pcall(function() loadstring(game:HttpGet(TOM_SCRIPT))() end)
 end)
 
--- FARM
 local FarmContent = Instance.new("Frame")
 FarmContent.Size = UDim2.new(1, 0, 1, -35)
 FarmContent.Position = UDim2.new(0, 0, 0, 32)
@@ -593,7 +562,7 @@ local Gramas = {
 }
 local CaixaPega = Vector3.new(77.48, 3.04, -429.99)
 local CaixaEntrega = Vector3.new(440.87, 3.85, -224.70)
-local autoLixo, autoGrama, autoCaixa, pegouFoice = false, false, false, false
+local autoLixo, autoGrama, autoCaixa = false, false, false
 
 local function teleportTo(pos)
 	local char = player.Character
@@ -609,10 +578,8 @@ local function activateNearPrompts()
 		for _, obj in pairs(workspace:GetDescendants()) do
 			if obj:IsA("ProximityPrompt") and obj.Enabled then
 				local parent = obj.Parent
-				if parent and parent:IsA("BasePart") then
-					if (parent.Position - hrp.Position).Magnitude < 15 then
-						pcall(function() fireproximityprompt(obj) end)
-					end
+				if parent and parent:IsA("BasePart") and (parent.Position - hrp.Position).Magnitude < 15 then
+					pcall(function() fireproximityprompt(obj) end)
 				end
 			end
 		end
@@ -635,7 +602,6 @@ end
 local function startAutoGrama()
 	task.spawn(function()
 		teleportTo(Foice) task.wait(1.2) activateNearPrompts() task.wait(1.5)
-		pegouFoice = true
 		while autoGrama do
 			for i = 1, #Gramas do
 				if not autoGrama then break end
@@ -695,7 +661,6 @@ CaixaBtn.MouseButton1Click:Connect(function()
 	if autoCaixa then startAutoCaixa() end
 end)
 
--- VOLVERS
 local VolversContent = Instance.new("Frame")
 VolversContent.Size = UDim2.new(1, 0, 1, -35)
 VolversContent.Position = UDim2.new(0, 0, 0, 32)
@@ -717,7 +682,6 @@ AbrirVolversBtn.Parent = VolversContent
 Instance.new("UICorner", AbrirVolversBtn).CornerRadius = UDim.new(0, 8)
 
 local VolversMenu = Instance.new("Frame")
-VolversMenu.Name = "VolversMenu"
 VolversMenu.Size = UDim2.new(0, 260, 0, 220)
 VolversMenu.Position = UDim2.new(0.5, -130, 0.5, -110)
 VolversMenu.BackgroundColor3 = Color3.fromRGB(16, 16, 20)
@@ -766,50 +730,37 @@ local BtnDireita = criarBtnVolvers("Direita", UDim2.new(0.04, 0, 0.55, 0))
 local BtnEsquerda = criarBtnVolvers("Esquerda", UDim2.new(0.52, 0, 0.55, 0))
 makeDraggable(VolversMenu)
 
-local posicaoSalva, rotacaoSalva = nil, nil
-
+local rotacaoSalva = nil
 local function salvarPosicao()
 	local char = player.Character
 	local hrp = char and char:FindFirstChild("HumanoidRootPart")
-	if hrp then
-		posicaoSalva = hrp.Position
-		rotacaoSalva = hrp.CFrame.LookVector
-	end
+	if hrp then rotacaoSalva = hrp.CFrame.LookVector end
 end
 
 local function virarPersonagem(graus)
 	local char = player.Character
 	local hrp = char and char:FindFirstChild("HumanoidRootPart")
-	if hrp then
-		hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(graus), 0)
-	end
+	if hrp then hrp.CFrame = hrp.CFrame * CFrame.Angles(0, math.rad(graus), 0) end
 end
 
 BtnRetaguarda.MouseButton1Click:Connect(function()
 	if not rotacaoSalva then salvarPosicao() end
 	virarPersonagem(180)
 end)
-
 BtnVoltaguarda.MouseButton1Click:Connect(function()
 	local char = player.Character
 	local hrp = char and char:FindFirstChild("HumanoidRootPart")
 	if hrp and rotacaoSalva then
-		local posicaoAtual = hrp.Position
-		hrp.CFrame = CFrame.new(posicaoAtual, posicaoAtual + rotacaoSalva)
+		local p = hrp.Position
+		hrp.CFrame = CFrame.new(p, p + rotacaoSalva)
 	end
 end)
-
 BtnDireita.MouseButton1Click:Connect(function() virarPersonagem(-90) end)
 BtnEsquerda.MouseButton1Click:Connect(function() virarPersonagem(90) end)
 AbrirVolversBtn.MouseButton1Click:Connect(function() VolversMenu.Visible = true end)
-
 if player.Character then salvarPosicao() end
-player.CharacterAdded:Connect(function()
-	task.wait(1)
-	salvarPosicao()
-end)
+player.CharacterAdded:Connect(function() task.wait(1) salvarPosicao() end)
 
--- ===== OUTROS =====
 local OutrosContent = Instance.new("Frame")
 OutrosContent.Size = UDim2.new(1, 0, 1, -35)
 OutrosContent.Position = UDim2.new(0, 0, 0, 32)
@@ -831,17 +782,13 @@ ChatBtn.Parent = OutrosContent
 Instance.new("UICorner", ChatBtn).CornerRadius = UDim.new(0, 8)
 
 ChatBtn.MouseButton1Click:Connect(function()
+	pcall(function() game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true) end)
+	pcall(function() game:GetService("StarterGui"):SetCore("ChatActive", true) end)
 	pcall(function()
-		game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
-	end)
-	pcall(function()
-		game:GetService("StarterGui"):SetCore("ChatActive", true)
-	end)
-	pcall(function()
-		local TextChatService = game:GetService("TextChatService")
-		if TextChatService then
-			TextChatService.ChatWindowConfiguration.Enabled = true
-			TextChatService.ChatInputBarConfiguration.Enabled = true
+		local tcs = game:GetService("TextChatService")
+		if tcs then
+			tcs.ChatWindowConfiguration.Enabled = true
+			tcs.ChatInputBarConfiguration.Enabled = true
 		end
 	end)
 	ChatBtn.Text = "CHAT LIBERADO"
@@ -851,7 +798,140 @@ ChatBtn.MouseButton1Click:Connect(function()
 	ChatBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
 end)
 
--- TROCA DE ABAS
+local IAContent = Instance.new("Frame")
+IAContent.Size = UDim2.new(1, 0, 1, -35)
+IAContent.Position = UDim2.new(0, 0, 0, 32)
+IAContent.BackgroundTransparency = 1
+IAContent.Visible = false
+IAContent.ZIndex = 3
+IAContent.Parent = Content
+
+local IATitle = Instance.new("TextLabel")
+IATitle.Size = UDim2.new(1, 0, 0, 22)
+IATitle.BackgroundTransparency = 1
+IATitle.Text = "Iá Texto"
+IATitle.TextColor3 = Color3.fromRGB(0, 180, 255)
+IATitle.Font = Enum.Font.GothamBold
+IATitle.TextSize = 16
+IATitle.TextXAlignment = Enum.TextXAlignment.Left
+IATitle.ZIndex = 3
+IATitle.Parent = IAContent
+
+local TemaBox = Instance.new("TextBox")
+TemaBox.Size = UDim2.new(0.95, 0, 0, 32)
+TemaBox.Position = UDim2.new(0.025, 0, 0, 28)
+TemaBox.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
+TemaBox.Text = ""
+TemaBox.PlaceholderText = "Digite o tema..."
+TemaBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TemaBox.PlaceholderColor3 = Color3.fromRGB(140, 140, 140)
+TemaBox.Font = Enum.Font.Gotham
+TemaBox.TextSize = 14
+TemaBox.ClearTextOnFocus = false
+TemaBox.ZIndex = 3
+TemaBox.Parent = IAContent
+Instance.new("UICorner", TemaBox).CornerRadius = UDim.new(0, 6)
+
+local linhasEscolhidas = 3
+local botoesLinhas = {}
+
+local function criarBtnLinha(texto, num, x)
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(0, 48, 0, 28)
+	btn.Position = UDim2.new(0, x, 0, 68)
+	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+	btn.Text = texto
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.Font = Enum.Font.GothamBold
+	btn.TextSize = 12
+	btn.ZIndex = 3
+	btn.Parent = IAContent
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+	btn.MouseButton1Click:Connect(function()
+		linhasEscolhidas = num
+		for _, b in pairs(botoesLinhas) do b.BackgroundColor3 = Color3.fromRGB(40, 40, 50) end
+		btn.BackgroundColor3 = Color3.fromRGB(0, 140, 255)
+	end)
+	table.insert(botoesLinhas, btn)
+end
+
+criarBtnLinha("2L", 2, 10)
+criarBtnLinha("3L", 3, 64)
+criarBtnLinha("4L", 4, 118)
+criarBtnLinha("5L", 5, 172)
+botoesLinhas[2].BackgroundColor3 = Color3.fromRGB(0, 140, 255)
+
+local GerarBtn = Instance.new("TextButton")
+GerarBtn.Size = UDim2.new(0, 90, 0, 28)
+GerarBtn.Position = UDim2.new(1, -100, 0, 68)
+GerarBtn.BackgroundColor3 = Color3.fromRGB(0, 140, 255)
+GerarBtn.Text = "GERAR"
+GerarBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+GerarBtn.Font = Enum.Font.GothamBold
+GerarBtn.TextSize = 13
+GerarBtn.ZIndex = 3
+GerarBtn.Parent = IAContent
+Instance.new("UICorner", GerarBtn).CornerRadius = UDim.new(0, 6)
+
+local Resultado = Instance.new("TextBox")
+Resultado.Size = UDim2.new(0.95, 0, 0, 140)
+Resultado.Position = UDim2.new(0.025, 0, 0, 105)
+Resultado.BackgroundColor3 = Color3.fromRGB(28, 28, 36)
+Resultado.Text = "O texto vai aparecer aqui..."
+Resultado.TextColor3 = Color3.fromRGB(220, 220, 220)
+Resultado.Font = Enum.Font.Gotham
+Resultado.TextSize = 13
+Resultado.TextWrapped = true
+Resultado.TextXAlignment = Enum.TextXAlignment.Left
+Resultado.TextYAlignment = Enum.TextYAlignment.Top
+Resultado.ClearTextOnFocus = false
+Resultado.MultiLine = true
+Resultado.TextEditable = false
+Resultado.ZIndex = 3
+Resultado.Parent = IAContent
+Instance.new("UICorner", Resultado).CornerRadius = UDim.new(0, 6)
+
+local CopiarBtn = Instance.new("TextButton")
+CopiarBtn.Size = UDim2.new(0.95, 0, 0, 32)
+CopiarBtn.Position = UDim2.new(0.025, 0, 0, 255)
+CopiarBtn.BackgroundColor3 = Color3.fromRGB(0, 130, 220)
+CopiarBtn.Text = "COPIAR TEXTO"
+CopiarBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CopiarBtn.Font = Enum.Font.GothamBold
+CopiarBtn.TextSize = 14
+CopiarBtn.ZIndex = 3
+CopiarBtn.Parent = IAContent
+Instance.new("UICorner", CopiarBtn).CornerRadius = UDim.new(0, 6)
+
+local function gerarTexto(tema, linhas)
+	tema = tema:gsub("^%s+", ""):gsub("%s+$", "")
+	if tema == "" then return "Digite um tema antes de gerar." end
+	local frases = {
+		"O tema \"" .. tema .. "\" é importante e merece atenção nos detalhes principais.",
+		"Ao falar sobre " .. tema .. ", é essencial manter clareza, organização e objetividade.",
+		"Uma boa abordagem de " .. tema .. " ajuda a entender melhor o assunto e a aplicar o conhecimento.",
+		"Em resumo, " .. tema .. " envolve pontos práticos que devem ser observados com cuidado.",
+		"Por fim, estudar e praticar " .. tema .. " contribui para um resultado mais consistente e profissional.",
+	}
+	local t = {}
+	for i = 1, math.min(linhas, #frases) do table.insert(t, frases[i]) end
+	return table.concat(t, "\n\n")
+end
+
+GerarBtn.MouseButton1Click:Connect(function()
+	Resultado.Text = gerarTexto(TemaBox.Text, linhasEscolhidas)
+end)
+
+CopiarBtn.MouseButton1Click:Connect(function()
+	local t = Resultado.Text
+	if t and t \~= "" and t \~= "O texto vai aparecer aqui..." and setclipboard then
+		setclipboard(t)
+		CopiarBtn.Text = "COPIADO!"
+		task.wait(1.2)
+		CopiarBtn.Text = "COPIAR TEXTO"
+	end
+end)
+
 local function showTab(name)
 	PatentesScroll.Visible = name == "Patentes"
 	PerguntasScroll.Visible = name == "Perguntas"
@@ -860,6 +940,7 @@ local function showTab(name)
 	FarmContent.Visible = name == "Farm"
 	VolversContent.Visible = name == "VOLVERS"
 	OutrosContent.Visible = name == "Outros"
+	IAContent.Visible = name == "IA"
 	ContentTitle.Text = name
 
 	TabPatentes.BackgroundColor3 = name == "Patentes" and Color3.fromRGB(0, 140, 255) or Color3.fromRGB(35, 35, 45)
@@ -869,6 +950,7 @@ local function showTab(name)
 	TabFarm.BackgroundColor3 = name == "Farm" and Color3.fromRGB(0, 140, 255) or Color3.fromRGB(35, 35, 45)
 	TabVolvers.BackgroundColor3 = name == "VOLVERS" and Color3.fromRGB(0, 140, 255) or Color3.fromRGB(35, 35, 45)
 	TabOutros.BackgroundColor3 = name == "Outros" and Color3.fromRGB(0, 140, 255) or Color3.fromRGB(35, 35, 45)
+	TabIA.BackgroundColor3 = name == "IA" and Color3.fromRGB(0, 140, 255) or Color3.fromRGB(35, 35, 45)
 end
 
 TabPatentes.MouseButton1Click:Connect(function() showTab("Patentes") end)
@@ -878,6 +960,7 @@ TabJJs.MouseButton1Click:Connect(function() showTab("JJs") end)
 TabFarm.MouseButton1Click:Connect(function() showTab("Farm") end)
 TabVolvers.MouseButton1Click:Connect(function() showTab("VOLVERS") end)
 TabOutros.MouseButton1Click:Connect(function() showTab("Outros") end)
+TabIA.MouseButton1Click:Connect(function() showTab("IA") end)
 TabClose.MouseButton1Click:Connect(function() MainFrame.Visible = false end)
 makeDraggable(MainFrame)
 
@@ -895,5 +978,3 @@ Ball.MouseButton1Click:Connect(function()
 	MainFrame.Visible = not MainFrame.Visible
 	if MainFrame.Visible then showTab("Patentes") end
 end)
-
-print("✅ GBDASP Hub | Outros + Liberar Chat")
